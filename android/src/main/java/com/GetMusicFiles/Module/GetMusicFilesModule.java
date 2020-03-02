@@ -2,7 +2,9 @@ package com.GetMusicFiles.Module;
 
 import android.content.ContentResolver;
 
+import com.GetMusicFiles.Methods.GetSongByPath;
 import com.GetMusicFiles.Models.Options.GetAllOptions;
+import com.GetMusicFiles.Models.Options.GetSongsByPathOptions;
 import com.GetMusicFiles.Models.Options.SearchOptions;
 import com.GetMusicFiles.Utils.ToRunnable;
 import com.facebook.react.bridge.Promise;
@@ -32,6 +34,7 @@ public class GetMusicFilesModule extends ReactContextBaseJavaModule {
         return "GetMusicFiles";
     }
 
+
     @ReactMethod
     public void getAll(ReadableMap args, Promise callback) {
 
@@ -53,7 +56,31 @@ public class GetMusicFilesModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getSongsByPath(ReadableMap options, Promise callback) {
+    public void getSongsByPath(ReadableMap args, Promise callback) {
+
+        Runnable runnable = new ToRunnable(
+                () -> {
+                    try {
+                        GetSongsByPathOptions options = new GetSongsByPathOptions(args);
+                        WritableMap results = GetSongByPath.extractMetaDataFromFile(String.valueOf(options.path));
+                        if(options.cover){
+                            try{
+                                String PathToCover = GetSongByPath.getCoverFromFile(String.valueOf(options.coverFolder), String.valueOf(options.path));
+                                results.putString("cover", PathToCover );
+                            }catch (Exception e){
+                                e.printStackTrace();
+                                results.putString("cover", "");
+                            }
+
+                        }
+                        callback.resolve(results);
+                    } catch (Exception e) {
+                        callback.reject(e);
+                    }
+                }
+        );
+
+        runnable.run();
 
     }
 

@@ -9,6 +9,7 @@ import android.util.Log;
 import com.GetMusicFiles.C;
 import com.GetMusicFiles.Models.Options.GetAllOptions;
 import com.GetMusicFiles.Utils.FS;
+import com.GetMusicFiles.Utils.MetaDataExtractor;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
@@ -43,26 +44,12 @@ public class GetAll {
             orderBy = generateSortOrder(options.sortBy, options.sortOrder);
         }
 
-        if(options.cover){
-
-            File f = new File(options.coverFolder);
-
-            if(f.exists() && !f.isDirectory()){
-                Log.e(LOG, "coverPath is a file");
-                throw new IOException("coverPath is a file");
-            }
-            if(!f.exists()){
-                f.mkdir();
-                Log.d(LOG, "coverFolder created");
-            }
-
-        }
         Cursor cursor = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 projection, Selection, null, orderBy);
 
         int cursorCount = Objects.requireNonNull(cursor).getCount();
 
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+
 
         if (cursorCount > (options.batchSize * options.batchNumber)) {
             cursor.moveToPosition(options.batchSize * options.batchNumber);
@@ -80,12 +67,12 @@ public class GetAll {
                 item.putString("id", cursor.getString(5));
 
                 if (options.cover) {
-                    mmr.setDataSource(path);
+
                     try {
-                        byte[] albumImageData = mmr.getEmbeddedPicture();
-                        FS.saveToStorage(CoverPath, albumImageData);
+                        byte[] albumImageData = MetaDataExtractor.getEmbededPicture(path);
+                        String coverPath = FS.saveToStorage(CoverPath, albumImageData);
                         Log.e(LOG, "File saved");
-                        item.putString("cover", CoverPath);
+                        item.putString("cover", coverPath);
                     }catch (Exception e){
                         Log.e(LOG, String.valueOf(e));
                         item.putString("cover", "");

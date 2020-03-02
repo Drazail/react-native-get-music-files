@@ -14,7 +14,7 @@ public class GetAllOptions {
 
     public GetAllOptions(ReadableMap options) {
         this.cover = options.hasKey("cover") && options.getBoolean("cover");
-        this.coverFolder = options.hasKey("coverFolder") ? options.getString("coverFolder") : android.os.Environment.getExternalStorageDirectory() + "/covers";
+        this.coverFolder = options.hasKey("coverFolder") ? options.getString("coverFolder") : android.os.Environment.getExternalStorageDirectory() + "/.covers";
         this.minimumSongDuration = options.hasKey("minimumSongDuration") ? options.getInt("minimumSongDuration") : 0;
         this.batchSize = options.hasKey("batchSize") ? options.getInt("batchSize") : 0;
         this.batchNumber = options.hasKey("batchNumber") ? options.getInt("batchNumber") : 0;

@@ -1,5 +1,6 @@
 package com.GetMusicFiles;
 
+import com.GetMusicFiles.Module.CoverImage;
 import com.GetMusicFiles.Module.GetMusicFilesModule;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;
@@ -24,6 +25,8 @@ public class GetMusicFiles implements ReactPackage {
 
     @Override
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-        return Collections.emptyList();
+        return Arrays.asList(
+                new CoverImage()
+        );
     }
 }

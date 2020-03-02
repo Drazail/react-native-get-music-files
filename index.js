@@ -1,4 +1,5 @@
 import { NativeModules } from 'react-native';
+import { requireNativeComponent } from 'react-native';
 
 const { GetMusicFiles } = NativeModules;
 
@@ -15,3 +16,5 @@ export const Constants = {
         Descending: 'DESC'
     }
 }
+
+export const CoverImage = requireNativeComponent('RCTCoverImageView');
