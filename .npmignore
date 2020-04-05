@@ -1,5 +1,4 @@
-example
-
+# Examples
 example
 # OSX
 #
@@ -38,10 +37,13 @@ project.xcworkspace
 # Android/IntelliJ
 #
 build/
+build
 .idea
 .gradle
 local.properties
 *.iml
+test/
+test
 
 # BUCK
 buck-out/

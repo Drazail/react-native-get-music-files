@@ -63,14 +63,56 @@ export default class App extends Component<Props> {
 
     this.getAll = () => {
       MusicFiles.getAll({
-        cover: true,
+        cover: false,
         batchSize: 0,
         batchNumber: 0,
         sortBy: Constants.SortBy.Title,
         sortOrder: Constants.SortOrder.Ascending,
       })
         .then(f => {
-          this.setState({...this.state, getAll: f});
+          this.setState({...this.state, search: f});
+        })
+        .catch(er => console.log(JSON.stringify(er)));
+    };
+
+    this.getArtists = () => {
+      MusicFiles.getArtists({
+        batchSize: 0,
+        batchNumber: 0,
+        sortBy: Constants.SortBy.Artist,
+        sortOrder: Constants.SortOrder.Ascending,
+      })
+        .then(f => {
+          this.setState({...this.state, search: f});
+        })
+        .catch(er => console.log(JSON.stringify(er)));
+    };
+
+    this.getAlbums = searchParam => {
+      MusicFiles.getAlbums({
+        artist: searchParam,
+        batchSize: 0,
+        batchNumber: 0,
+        sortBy: Constants.SortBy.Artist,
+        sortOrder: Constants.SortOrder.Ascending,
+      })
+        .then(f => {
+          this.setState({...this.state, search: f});
+        })
+        .catch(er => console.log(JSON.stringify(er)));
+    };
+
+    this.getSongs = (album, artist) => {
+      MusicFiles.getSongs({
+        artist: artist,
+        album: album,
+        batchSize: 0,
+        batchNumber: 0,
+        sortBy: Constants.SortBy.Artist,
+        sortOrder: Constants.SortOrder.Ascending,
+      })
+        .then(f => {
+          this.setState({...this.state, search: f});
         })
         .catch(er => console.log(JSON.stringify(er)));
     };
@@ -79,24 +121,19 @@ export default class App extends Component<Props> {
       MusicFiles.getSongsByPath({
         cover: true,
         coverFolder: '/storage/emulated/0/Download/Covers',
-        path: '/storage/emulated/0/Download/01 - Moonromanticism.mp3',
+        path: '/storage/emulated/0/Download/Help Me.mp3',
       })
         .then(f => {
-          this.setState({...this.state, getAll: f});
+          this.setState({...this.state, search: f});
         })
-        .catch(er => console.log(JSON.stringify(er)));
+        .catch(er => console.log(JSON.stringify(er.message)));
     };
 
     this.state = {
-      getAlbumsInput: '',
-      getSongsInput: {},
       searchParam: '',
-      tracks: [],
-      artists: [],
-      albums: [],
-      songs: [],
+      getSongsSearchParamArtist: null,
+      getSongsSearchParamAlbum: null,
       search: [],
-      getAll: [],
     };
   }
 
@@ -107,33 +144,70 @@ export default class App extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <CoverImage
-          src={
-            '/storage/emulated/0/Music/Ahangify/Alireza Pouya - Kotah Bia.mp3'
-          }
-          width={120}
-          height={120}
-          backgroundColor="red"
-        />
-        <TextInput
-          placeholder="search"
-          onChangeText={v => this.setState({...this.state, searchParam: v})}
-        />
-        <Button
-          title="search"
-          onPress={() => this.search(this.state.searchParam)}
-        />
-        <ScrollView style={{height: 100, width: '100%'}}>
+        <ScrollView style={styles.scrollVIew}>
+          <Text />
+          <CoverImage
+            src={
+              '/storage/emulated/0/Download/Reza Pishro Moarefie Nabegheha.mp3'
+            }
+            width={120}
+            height={120}
+            backgroundColor="red"
+          />
+          <Text />
+          <TextInput
+            placeholder="search param"
+            onChangeText={v => this.setState({...this.state, searchParam: v})}
+            style={styles.input}
+          />
+
+          <Text />
+          <TextInput
+            placeholder="getSongs search param: Artist"
+            onChangeText={v =>
+              this.setState({...this.state, getSongsSearchParamArtist: v})
+            }
+            style={styles.input}
+          />
+          <Text />
+          <TextInput
+            placeholder="getSongs search param: Album"
+            onChangeText={v =>
+              this.setState({...this.state, getSongsSearchParamAlbum: v})
+            }
+            style={styles.input}
+          />
+          <Text />
+          <Button
+            title="search"
+            onPress={() => this.search(this.state.searchParam)}
+          />
+
+          <Text />
+          <Button title="getall" onPress={() => this.getAll()} />
+
+          <Text />
+          <Button title="getArtists" onPress={() => this.getArtists()} />
+
+          <Text />
+          <Button
+            title="getAlbums"
+            onPress={() => this.getAlbums(this.state.searchParam)}
+          />
+
+          <Text />
+          <Button
+            title="getSongs"
+            onPress={() =>
+              this.getSongs(
+                this.state.getSongsSearchParamAlbum,
+                this.state.getSongsSearchParamArtist,
+              )
+            }
+          />
+
           <Text style={styles.instructions}>
             results : {JSON.stringify(this.state.search)}
-          </Text>
-        </ScrollView>
-
-        <Text>getAll</Text>
-        <Button title="search" onPress={() => this.getSongByPath()} />
-        <ScrollView style={{height: 100, width: '100%'}}>
-          <Text style={styles.instructions}>
-            results : {JSON.stringify(this.state.getAll)}
           </Text>
         </ScrollView>
       </View>
@@ -146,7 +220,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    alignContent: 'center',
     backgroundColor: '#F5FCFF',
+  },
+  scrollVIew: {
+    width: '80%',
   },
   welcome: {
     fontSize: 20,
@@ -157,5 +235,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
+    alignSelf: 'center',
+    justifyContent: 'center',
+  },
+  input: {
+    borderColor: 'gray',
+    borderWidth: 2,
+    width: '100%',
+    height: 40,
+    textAlign: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
   },
 });

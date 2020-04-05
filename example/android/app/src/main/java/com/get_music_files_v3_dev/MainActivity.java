@@ -1,4 +1,4 @@
-package com.example;
+package com.get_music_files_v3_dev;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "example";
+    return "get_music_files_v3_dev";
   }
 }

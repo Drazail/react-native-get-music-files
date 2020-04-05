@@ -1,20 +1,16 @@
 {
-  "name": "react-native-get-music-files",
-  "title": "React Native Get Music Files",
-  "version": "3.0.0",
+  "name": "react-native-get-music-files-v3dev-test",
+  "title": "React Native Get Music Files-v3dev-test",
+  "version": "3.1.0",
   "description": "A module to scan media files",
-
   "main": "index.js",
-
   "scripts": {
     "test": "jest"
   },
-
   "author": {
     "name": "Drazail",
     "email": "drliazard@gmail.com"
   },
-
   "contributors": [
     {
       "name": "Drazail",
@@ -23,23 +19,15 @@
     }
   ],
   "keywords": [
-    "react-native",
-    "music",
-    "media",
-    "files",
-    "metadata",
-    "ios",
-    "android",
-    "react",
-    "native"
+    "react-native"
   ],
   "license": "IST",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cinder92/react-native-get-music-files"
+    "url": "https://github.com/Drazail/react-native-get-music-files/tree/v3dev"
   },
   "bugs": {
-    "url": "https://github.com/cinder92/react-native-get-music-files/issues"
+    "url": "https://github.com/Drazail/react-native-get-music-files/tree/v3dev"
   },
   "readmeFilename": "README.md",
   "peerDependencies": {
@@ -60,6 +48,9 @@
   "jest": {
     "testRegex": "(/__tests__/.*\\.test\\.js)$",
     "collectCoverage": true,
-    "coverageReporters": ["json", "html"]
+    "coverageReporters": [
+      "json",
+      "html"
+    ]
   }
 }

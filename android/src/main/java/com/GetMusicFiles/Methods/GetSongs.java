@@ -3,25 +3,23 @@ package com.GetMusicFiles.Methods;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import com.GetMusicFiles.C;
-import com.GetMusicFiles.Models.Options.GetAllOptions;
-import com.GetMusicFiles.Utils.FS;
-import com.GetMusicFiles.Utils.MetaDataExtractor;
+import com.GetMusicFiles.Models.Options.GetSongsOptions;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-import static com.GetMusicFiles.Utils.GeneralUtils.LOG;
 import static com.GetMusicFiles.Utils.OrderByGenerator.generateSortOrder;
 
-public class GetAll {
+public class GetSongs {
 
-    public static WritableMap getAllSongs(GetAllOptions options, ContentResolver contentResolver) throws Exception {
+    public static WritableMap getSongs(GetSongsOptions options, ContentResolver contentResolver) throws Exception {
 
         WritableArray jsonArray = new WritableNativeArray();
         String[] projection = new String[]{MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ARTIST,
@@ -30,10 +28,21 @@ public class GetAll {
 
 
         String Selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0";
-
-        if (options.minimumSongDuration > 0) {
-            Selection += " AND " + MediaStore.Audio.Media.DURATION + " >= " + options.minimumSongDuration;
+        String artistSearchParam ;
+        String albumSearchParam ;
+        List<String> selectionArgs = new ArrayList<>();
+        if (options.artist != null) {
+            Selection += " AND " + MediaStore.Audio.Media.ARTIST + " Like ?";
+            artistSearchParam = "%" + options.artist + "%";
+            selectionArgs.add(artistSearchParam);
         }
+
+        if (options.album != null) {
+            Selection += " AND " + MediaStore.Audio.Media.ALBUM + " Like ?";
+            albumSearchParam = "%" + options.album + "%";
+            selectionArgs.add(albumSearchParam);
+        }
+
 
         String orderBy = null;
 
@@ -42,7 +51,7 @@ public class GetAll {
         }
 
         Cursor cursor = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                projection, Selection, null, orderBy);
+                projection, Selection, selectionArgs.size() != 0 ? selectionArgs.toArray(new String[0]) : null, orderBy);
 
         int cursorCount = Objects.requireNonNull(cursor).getCount();
 
@@ -50,9 +59,6 @@ public class GetAll {
         if (cursorCount > (options.batchSize * options.batchNumber)) {
             cursor.moveToPosition(options.batchSize * options.batchNumber);
             do {
-                String path = cursor.getString(4);
-
-                String CoverPath = options.coverFolder + cursor.getString(5);
 
                 WritableMap item = new WritableNativeMap();
                 item.putString("title", cursor.getString(0));
@@ -62,18 +68,6 @@ public class GetAll {
                 item.putString("path", cursor.getString(4));
                 item.putString("id", cursor.getString(5));
 
-                if (options.cover) {
-
-                    try {
-                        byte[] albumImageData = MetaDataExtractor.getEmbededPicture(path);
-                        String coverPath = FS.saveToStorage(CoverPath, albumImageData);
-                        Log.e(LOG, "File saved");
-                        item.putString("cover", coverPath);
-                    } catch (Exception e) {
-                        Log.e(LOG, String.valueOf(e));
-                        item.putString("cover", "");
-                    }
-                }
                 jsonArray.pushMap(item);
             } while ((options.batchSize == 0 || cursor.getPosition() + 1 < options.batchSize * (options.batchNumber + 1)) & cursor.moveToNext());
         } else {
