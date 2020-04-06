@@ -1,7 +1,7 @@
 {
   "name": "react-native-get-music-files-v3dev-test",
   "title": "React Native Get Music Files-v3dev-test",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "A module to scan media files",
   "main": "index.js",
   "scripts": {
