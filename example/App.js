@@ -147,12 +147,12 @@ export default class App extends Component<Props> {
         <ScrollView style={styles.scrollVIew}>
           <Text />
           <CoverImage
-            src={
-              '/storage/emulated/0/Download/Reza Pishro Moarefie Nabegheha.mp3'
+            source={'/storage/emulated/0/Download/Hurt - Johnny Cash.mp3'}
+            placeHolder={
+              'https://cdn2.iconfinder.com/data/icons/Qetto___icons_by_ampeross-d4njobq/256/library-music.png'
             }
             width={120}
             height={120}
-            backgroundColor="red"
           />
           <Text />
           <TextInput

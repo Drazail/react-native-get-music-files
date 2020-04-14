@@ -5,6 +5,7 @@ import android.util.Base64;
 import androidx.annotation.Nullable;
 
 import com.GetMusicFiles.Utils.MetaDataExtractor;
+import com.GetMusicFiles.Utils.ToRunnable;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
@@ -22,7 +23,7 @@ import static android.util.Base64.*;
 public class CoverImage extends SimpleViewManager<ReactImageView> {
 
     public static final String REACT_CLASS = "RCTCoverImageView";
-
+    String placeHolder = "https://images-na.ssl-images-amazon.com/images/I/51bMt-LGOyL.png";
 
     @Override
     public String getName() {
@@ -34,28 +35,28 @@ public class CoverImage extends SimpleViewManager<ReactImageView> {
         return new ReactImageView(context, Fresco.newDraweeControllerBuilder(), null, null);
     }
 
-    @ReactProp(name = "src")
+    @ReactProp(name = "placeHolder")
+    public void setPlaceHolder(ReactImageView view, String path) {
+        placeHolder = path;
+    }
+
+    @ReactProp(name = "source")
     public void setSrc(ReactImageView view, String path) {
         WritableArray sources = new WritableNativeArray();
         WritableMap sourceMap = new WritableNativeMap();
-        try{
-            String base64 = Base64.encodeToString(MetaDataExtractor.getEmbededPicture(path), DEFAULT) ;
-            sourceMap.putString("uri","data:image/jpg;base64,"+ base64 );
-            sources.pushMap(sourceMap);
-            view.setSource(sources);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-    }
-
-    @ReactProp(name = "borderRadius", defaultFloat = 0f)
-    public void setBorderRadius(ReactImageView view, float borderRadius) {
-        view.setBorderRadius(borderRadius);
-    }
-
-    @ReactProp(name = ViewProps.RESIZE_MODE)
-    public void setResizeMode(ReactImageView view, @Nullable String resizeMode) {
-        view.setScaleType(ImageResizeMode.toScaleType(resizeMode));
+        ToRunnable getImageAsBase64 = new ToRunnable(()->{
+            try{
+                String base64 = Base64.encodeToString(MetaDataExtractor.getEmbededPicture(path), DEFAULT) ;
+                sourceMap.putString("uri","data:image/jpg;base64,"+ base64 );
+                sources.pushMap(sourceMap);
+                view.setSource(sources);
+            }catch (Exception e){
+                e.printStackTrace();
+                sourceMap.putString("uri",placeHolder );
+                sources.pushMap(sourceMap);
+                view.setSource(sources);
+            }
+        });
+        getImageAsBase64.run();
     }
 }
