@@ -16,6 +16,7 @@ import {
   Button,
   TextInput,
   ScrollView,
+  FlatList,
 } from 'react-native';
 import MusicFiles, {Constants, CoverImage} from 'react-native-get-music-files';
 
@@ -63,7 +64,7 @@ export default class App extends Component<Props> {
 
     this.getAll = () => {
       MusicFiles.getAll({
-        cover: false,
+        cover: true,
         batchSize: 0,
         batchNumber: 0,
         sortBy: Constants.SortBy.Title,

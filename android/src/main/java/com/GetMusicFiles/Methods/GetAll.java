@@ -52,7 +52,7 @@ public class GetAll {
             do {
                 String path = cursor.getString(4);
 
-                String CoverPath = options.coverFolder + cursor.getString(5);
+                String CoverPath = options.coverFolder;
 
                 WritableMap item = new WritableNativeMap();
                 item.putString("title", cursor.getString(0));
