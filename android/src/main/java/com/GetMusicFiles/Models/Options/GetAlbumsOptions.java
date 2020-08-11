@@ -5,6 +5,7 @@ import com.facebook.react.bridge.ReadableMap;
 
 public class GetAlbumsOptions {
     public String artist;
+    public String album;
     public int batchSize;
     public int batchNumber;
     public C.SortBy sortBy;
@@ -12,6 +13,7 @@ public class GetAlbumsOptions {
 
     public GetAlbumsOptions(ReadableMap options) {
         this.artist = options.hasKey("artist") ? options.getString("artist") : null;
+        this.album = options.hasKey("album") ? options.getString("album") : null;
         this.batchSize = options.hasKey("batchSize") ? options.getInt("batchSize") : 0;
         this.batchNumber = options.hasKey("batchNumber") ? options.getInt("batchNumber") : 0;
         this.sortBy = options.hasKey("sortBy") ? C.SortBy.valueOf(options.getString("sortBy")) : null;

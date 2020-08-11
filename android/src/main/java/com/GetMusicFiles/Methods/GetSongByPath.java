@@ -21,34 +21,59 @@ import static com.GetMusicFiles.Utils.GeneralUtils.LOG;
 
 public class GetSongByPath {
 
-    public static WritableMap extractMetaDataFromFile (String path){
+    public static WritableMap extractMetaDataFromFile(String path) {
 
         WritableMap results = new WritableNativeMap();
         HashMap<String, String> MetaMap = MetaDataExtractor.getMetaData(path);
-        for (Map.Entry<String, String> entry : MetaMap.entrySet()){
+        for (Map.Entry<String, String> entry : MetaMap.entrySet()) {
             results.putString(entry.getKey(), entry.getValue());
         }
 
         return results;
     }
 
-    public static WritableArray extractMetaDataFromDirectory ( String uri, int minFileSize, int maxFileSize, String extensionFilter){
+    public static WritableMap extractMetaDataFromDirectory(String uri, int minFileSize, int maxFileSize, String extensionFilter, boolean cover, String coverPath, boolean sorted, int batchSize, int batchNumber) throws IOException {
         WritableArray results = new WritableNativeArray();
         File file = new File(uri);
-        if(file.isDirectory()){
+        WritableMap resultsMap = new WritableNativeMap();
+        if (file.isDirectory()) {
             List<String> filesPaths = new ArrayList<>();
-            FS.listFilesForFolder( new File(uri), minFileSize, maxFileSize, extensionFilter, filesPaths);
-            for (String s : filesPaths) {
-                WritableMap result = new WritableNativeMap();
-                HashMap<String, String> MetaMap = MetaDataExtractor.getMetaData(s);
-                for (Map.Entry<String, String> entry : MetaMap.entrySet()){
-                    result.putString(entry.getKey(), entry.getValue());
+            FS.listFilesForFolder(new File(uri), minFileSize, maxFileSize, extensionFilter, filesPaths, sorted);
+            if(batchSize == 0) {
+                for (String s : filesPaths) {
+                    WritableMap result = new WritableNativeMap();
+                    result.putString("path", s);
+                    HashMap<String, String> MetaMap = MetaDataExtractor.getMetaData(s);
+                    for (Map.Entry<String, String> entry : MetaMap.entrySet()) {
+                        result.putString(entry.getKey(), entry.getValue());
+                    }
+                    if (cover) {
+                        String path = getCoverFromFile(coverPath, s);
+                        result.putString("cover", path);
+                    }
+                    results.pushMap(result);
                 }
-                results.pushMap(result);
+            } else{
+                List<String> batch = filesPaths.subList(batchSize*batchNumber, Math.min(batchSize * (batchNumber + 1), filesPaths.size()));
+                for (String s : batch) {
+                    WritableMap result = new WritableNativeMap();
+                    result.putString("path", s);
+                    HashMap<String, String> MetaMap = MetaDataExtractor.getMetaData(s);
+                    for (Map.Entry<String, String> entry : MetaMap.entrySet()) {
+                        result.putString(entry.getKey(), entry.getValue());
+                    }
+                    if (cover) {
+                        String path = getCoverFromFile(coverPath, s);
+                        result.putString("cover", path);
+                    }
+                    results.pushMap(result);
+                }
             }
-        }
 
-        return results;
+            resultsMap.putString("length", String.valueOf(filesPaths.size()));
+            resultsMap.putArray("results",results);
+        }
+        return resultsMap;
     }
 
     public static String getCoverFromFile(String CoverPath, String path) throws IOException {
@@ -57,7 +82,6 @@ public class GetSongByPath {
         Log.e(LOG, "File saved");
         return coverPath;
     }
-
 
 
 }

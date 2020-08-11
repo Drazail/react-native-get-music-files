@@ -32,6 +32,7 @@ public class GetMusicFilesModule extends ReactContextBaseJavaModule {
 
     private final ReactApplicationContext reactContext;
     private SerialExecutor executor;
+
     public GetMusicFilesModule(ReactApplicationContext reactContext, SerialExecutor exec) {
         super(reactContext);
         this.reactContext = reactContext;
@@ -101,8 +102,8 @@ public class GetMusicFilesModule extends ReactContextBaseJavaModule {
                 () -> {
                     try {
                         GetSongsByPathsOptions options = new GetSongsByPathsOptions(args);
-                        WritableArray results = GetSongByPath.extractMetaDataFromDirectory(
-                                String.valueOf(options.path), options.minFileSize, options.maxFileSize, options.extensionFilter);
+                        WritableMap results = GetSongByPath.extractMetaDataFromDirectory(
+                                String.valueOf(options.path), options.minFileSize, options.maxFileSize, options.extensionFilter, options.cover, String.valueOf(options.coverFolder), options.sorted, options.batchSize, options.batchNumber);
                         callback.resolve(results);
                     } catch (Exception e) {
                         callback.reject(e);

@@ -11,6 +11,8 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static com.GetMusicFiles.Utils.OrderByGenerator.generateSortOrder;
@@ -18,6 +20,10 @@ import static com.GetMusicFiles.Utils.OrderByGenerator.generateSortOrder;
 public class GetArtists {
 
     public static WritableMap getArtists(GetArtistsOptions options, ContentResolver contentResolver) throws Exception {
+
+        List<String> selectionArgs = new ArrayList<>();
+        String artistSearchParam ;
+        String Selection = null;
 
         WritableArray jsonArray = new WritableNativeArray();
         String[] projection = new String[]{MediaStore.Audio.Artists.ARTIST,
@@ -28,9 +34,15 @@ public class GetArtists {
         if (options.sortBy != null) {
             orderBy = generateSortOrder(options.sortBy, options.sortOrder);
         }
+        if (options.artist != null) {
+            artistSearchParam = "%" + options.artist + "%";
+            Selection = MediaStore.Audio.Artists.ARTIST + " Like ?";
+            selectionArgs.add(artistSearchParam);
+        }
+
 
         Cursor cursor = contentResolver.query(MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
-                projection, null, null, orderBy);
+                projection, Selection, selectionArgs.size() != 0 ? selectionArgs.toArray(new String[0]): null, orderBy);
 
         int cursorCount = Objects.requireNonNull(cursor).getCount();
 

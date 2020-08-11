@@ -75,11 +75,25 @@ public class FS {
         return "-1";
     }
 
-    public static void listFilesForFolder(File folder, int minFileSize, int maxFileSize, String extensionFilter, List<String> list) {
+    static class Pair implements Comparable {
+        public long t;
+        public File f;
 
+        public Pair(File file) {
+            f = file;
+            t = file.lastModified();
+        }
+
+        public int compareTo(Object o) {
+            long u = ((Pair) o).t;
+            return Long.compare(t, u);
+        }
+    };
+
+    public static void listFilesForFolder(File folder, int minFileSize, int maxFileSize, String extensionFilter, List<String> list, boolean sorted) {
         for (final File fileEntry : folder.listFiles()) {
             if (fileEntry.isDirectory()) {
-                listFilesForFolder(fileEntry, minFileSize, maxFileSize, extensionFilter, list);
+                listFilesForFolder(fileEntry, minFileSize, maxFileSize, extensionFilter, list, sorted);
             } else {
 
                 long fileSize = fileEntry.length();
@@ -90,6 +104,13 @@ public class FS {
                     list.add(fileEntry.getAbsolutePath());
             }
         }
+        if(sorted){
+            int listSize = list.size();
+            Pair[] pairs = new Pair[listSize];
+            for (int i = 0; i < listSize; i++)
+                pairs[i] = new Pair(new File(list.get(i)));
+            for (int i = 0; i < listSize; i++)
+                list.set(i,pairs[i].f.getAbsolutePath());
+        }
     }
-
 }

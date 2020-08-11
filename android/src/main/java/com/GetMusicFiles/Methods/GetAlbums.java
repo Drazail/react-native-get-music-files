@@ -11,6 +11,8 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static com.GetMusicFiles.Utils.OrderByGenerator.generateSortOrder;
@@ -18,6 +20,11 @@ import static com.GetMusicFiles.Utils.OrderByGenerator.generateSortOrder;
 public class GetAlbums {
 
     public static WritableMap getAlbums(GetAlbumsOptions options, ContentResolver contentResolver) throws Exception {
+
+        List<String> selectionArgs = new ArrayList<>();
+        String artistSearchParam ;
+        String albumSearchParam ;
+        String Selection = null;
 
         WritableArray jsonArray = new WritableNativeArray();
         String[] projection = new String[]{MediaStore.Audio.Albums._ID, MediaStore.Audio.Albums.ALBUM,
@@ -28,11 +35,23 @@ public class GetAlbums {
         };
 
 
-        String Selection = null;
-        String searchParam = null;
+
+
         if (options.artist != null) {
-            searchParam = "%" + options.artist + "%";
+            artistSearchParam = "%" + options.artist + "%";
             Selection = MediaStore.Audio.Albums.ARTIST + " Like ?";
+            selectionArgs.add(artistSearchParam);
+        }
+
+        if (options.album != null) {
+            albumSearchParam = "%" + options.album + "%";
+            if (options.artist != null) {
+                Selection += " AND " + MediaStore.Audio.Media.ALBUM + " Like ?";
+            }
+            if (options.artist == null) {
+                Selection = MediaStore.Audio.Media.ALBUM + " Like ?";
+            }
+            selectionArgs.add(albumSearchParam);
         }
 
         String orderBy = null;
@@ -42,7 +61,7 @@ public class GetAlbums {
         }
 
         Cursor cursor = contentResolver.query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
-                projection, Selection, searchParam == null ? null : new String[]{searchParam}, orderBy);
+                projection, Selection, selectionArgs.size() != 0 ? selectionArgs.toArray(new String[0]): null, orderBy);
 
         int cursorCount = Objects.requireNonNull(cursor).getCount();
 
