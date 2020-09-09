@@ -269,7 +269,7 @@ public class BlurBuilder extends Application {
         byte[] imageByte = Base64.decode(encodedImage, Base64.DEFAULT);
 
 
-        fcm.saveToStorage(pathToImg, imageByte);
+        fcm.saveToStorage(pathToImg, imageByte.toString());
 
         return pathToImg;
 
