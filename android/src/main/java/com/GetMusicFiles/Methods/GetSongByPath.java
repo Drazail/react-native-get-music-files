@@ -32,14 +32,14 @@ public class GetSongByPath {
         return results;
     }
 
-    public static WritableMap extractMetaDataFromDirectory(String uri, int minFileSize, int maxFileSize, String extensionFilter, boolean cover, String coverPath, boolean sorted, int batchSize, int batchNumber) throws IOException {
+    public static WritableMap extractMetaDataFromDirectory(String uri, int minFileSize, int maxFileSize, String extensionFilter, boolean metaData, boolean cover, String coverPath, boolean sorted, int batchSize, int batchNumber) throws IOException {
         WritableArray results = new WritableNativeArray();
         File file = new File(uri);
         WritableMap resultsMap = new WritableNativeMap();
         if (file.isDirectory()) {
             List<String> filesPaths = new ArrayList<>();
             FS.listFilesForFolder(new File(uri), minFileSize, maxFileSize, extensionFilter, filesPaths, sorted);
-            if(batchSize == 0) {
+            if (batchSize == 0) {
                 for (String s : filesPaths) {
                     WritableMap result = new WritableNativeMap();
                     result.putString("path", s);
@@ -53,14 +53,17 @@ public class GetSongByPath {
                     }
                     results.pushMap(result);
                 }
-            } else{
-                List<String> batch = filesPaths.subList(batchSize*batchNumber, Math.min(batchSize * (batchNumber + 1), filesPaths.size()));
+            } else {
+                List<String> batch = filesPaths.subList(batchSize * batchNumber, Math.min(batchSize * (batchNumber + 1), filesPaths.size()));
                 for (String s : batch) {
                     WritableMap result = new WritableNativeMap();
                     result.putString("path", s);
-                    HashMap<String, String> MetaMap = MetaDataExtractor.getMetaData(s);
-                    for (Map.Entry<String, String> entry : MetaMap.entrySet()) {
-                        result.putString(entry.getKey(), entry.getValue());
+                    result.putString("lastModified", String.valueOf(new File(s).lastModified()));
+                    if (metaData) {
+                        HashMap<String, String> MetaMap = MetaDataExtractor.getMetaData(s);
+                        for (Map.Entry<String, String> entry : MetaMap.entrySet()) {
+                            result.putString(entry.getKey(), entry.getValue());
+                        }
                     }
                     if (cover) {
                         String path = getCoverFromFile(coverPath, s);
@@ -71,14 +74,13 @@ public class GetSongByPath {
             }
 
             resultsMap.putString("length", String.valueOf(filesPaths.size()));
-            resultsMap.putArray("results",results);
+            resultsMap.putArray("results", results);
         }
         return resultsMap;
     }
 
     public static String getCoverFromFile(String CoverPath, String path) throws IOException {
-        byte[] albumImageData = MetaDataExtractor.getEmbededPicture(path);
-        String coverPath = FS.saveToStorage(CoverPath, albumImageData);
+        String coverPath = FS.saveToStorage(CoverPath, path);
         Log.e(LOG, "File saved");
         return coverPath;
     }

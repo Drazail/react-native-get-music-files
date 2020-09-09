@@ -65,8 +65,7 @@ public class GetAll {
                 if (options.cover) {
 
                     try {
-                        byte[] albumImageData = MetaDataExtractor.getEmbededPicture(path);
-                        String coverPath = FS.saveToStorage(CoverPath, albumImageData);
+                        String coverPath = FS.saveToStorage(CoverPath, path);
                         Log.e(LOG, "File saved");
                         item.putString("cover", coverPath);
                     } catch (Exception e) {

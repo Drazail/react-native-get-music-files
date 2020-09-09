@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 
 import com.GetMusicFiles.Methods.GetAlbums;
 import com.GetMusicFiles.Methods.GetArtists;
+import com.GetMusicFiles.Methods.GetSongById;
 import com.GetMusicFiles.Methods.GetSongByPath;
 import com.GetMusicFiles.Methods.GetSongs;
 import com.GetMusicFiles.Models.Options.GetAlbumsOptions;
@@ -103,7 +104,7 @@ public class GetMusicFilesModule extends ReactContextBaseJavaModule {
                     try {
                         GetSongsByPathsOptions options = new GetSongsByPathsOptions(args);
                         WritableMap results = GetSongByPath.extractMetaDataFromDirectory(
-                                String.valueOf(options.path), options.minFileSize, options.maxFileSize, options.extensionFilter, options.cover, String.valueOf(options.coverFolder), options.sorted, options.batchSize, options.batchNumber);
+                                String.valueOf(options.path), options.minFileSize, options.maxFileSize, options.extensionFilter, options.metaData, options.cover, String.valueOf(options.coverFolder), options.sorted, options.batchSize, options.batchNumber);
                         callback.resolve(results);
                     } catch (Exception e) {
                         callback.reject(e);
@@ -123,6 +124,23 @@ public class GetMusicFilesModule extends ReactContextBaseJavaModule {
                         GetAlbumsOptions options = new GetAlbumsOptions(args);
                         ContentResolver contentResolver = Objects.requireNonNull(getCurrentActivity()).getContentResolver();
                         WritableMap results = GetAlbums.getAlbums(options, contentResolver);
+                        callback.resolve(results);
+                    } catch (Exception e) {
+                        callback.reject(e);
+                    }
+                }, executor
+        );
+
+        runnable.run();
+    }
+
+    @ReactMethod
+    public void getSongById(String id, Promise callback) {
+        Runnable runnable = new ToRunnable(
+                () -> {
+                    try {
+                        ContentResolver contentResolver = Objects.requireNonNull(getCurrentActivity()).getContentResolver();
+                        WritableMap results = GetSongById.getSongById(contentResolver);
                         callback.resolve(results);
                     } catch (Exception e) {
                         callback.reject(e);

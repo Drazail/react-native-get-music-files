@@ -36,9 +36,9 @@ public class FS {
         return formatter.toString();
     }
 
-    public static String saveToStorage(@NonNull String pathToImg, @NonNull byte[] imageBytes) throws IOException {
+    public static String saveToStorage(@NonNull String pathToImg, String TrackPath) throws IOException {
         File f = new File(pathToImg);
-        File filePath = new File(pathToImg+ "/" + SHAsum(imageBytes));
+        File filePath = new File(pathToImg+ "/" + SHAsum(TrackPath.getBytes()));
 
         if(f.exists() && !f.isDirectory()){
             Log.e(LOG, "coverPath is a file");
@@ -52,6 +52,8 @@ public class FS {
         if(filePath.exists()){
            return filePath.getAbsolutePath();
         }
+
+        byte[] imageBytes = MetaDataExtractor.getEmbededPicture(TrackPath);
 
         FileOutputStream fos = null;
         try {

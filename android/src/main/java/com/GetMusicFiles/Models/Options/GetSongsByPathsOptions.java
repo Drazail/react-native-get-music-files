@@ -14,6 +14,7 @@ public class GetSongsByPathsOptions {
     public boolean sorted;
     public int batchSize;
     public int batchNumber;
+    public boolean metaData;
 
     public GetSongsByPathsOptions(ReadableMap options) {
         this.path = options.hasKey("path") ? Uri.parse(options.getString("path")) : null;
@@ -21,6 +22,7 @@ public class GetSongsByPathsOptions {
         this.maxFileSize = options.hasKey("maxFileSize") ? options.getInt("maxFileSize") : 1073741824;
         this.extensionFilter = options.hasKey("extensionFilter") ? options.getString("extensionFilter") : "";
         this.cover = options.hasKey("cover") && options.getBoolean("cover");
+        this.metaData = options.hasKey("metaData") && options.getBoolean("metaData");
         this.coverFolder = options.hasKey("coverFolder") ? Uri.parse(options.getString("coverFolder")) : null;
         this.sorted = options.hasKey("sorted") && options.getBoolean("sorted");
         this.batchSize = options.hasKey("batchSize") ? options.getInt("batchSize") : 0;
