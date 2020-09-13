@@ -26,7 +26,7 @@ public class GetAll {
         WritableArray jsonArray = new WritableNativeArray();
         String[] projection = new String[]{MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ARTIST,
                 MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.DURATION, MediaStore.Audio.Media.DATA,
-                MediaStore.Audio.Media._ID};
+                MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATE_MODIFIED, MediaStore.Audio.Media.DATE_ADDED};
 
 
         String Selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0";
@@ -61,6 +61,8 @@ public class GetAll {
                 item.putString("duration", cursor.getString(3));
                 item.putString("path", cursor.getString(4));
                 item.putString("id", cursor.getString(5));
+                item.putString("lastModified", cursor.getString(6));
+                item.putString("dateAdded", cursor.getString(7));
 
                 if (options.cover) {
 
