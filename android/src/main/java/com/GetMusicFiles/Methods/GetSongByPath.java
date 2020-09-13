@@ -28,6 +28,7 @@ public class GetSongByPath {
         for (Map.Entry<String, String> entry : MetaMap.entrySet()) {
             results.putString(entry.getKey(), entry.getValue());
         }
+        results.putString("lastModified", String.valueOf(new File(path).lastModified()) );
 
         return results;
     }
