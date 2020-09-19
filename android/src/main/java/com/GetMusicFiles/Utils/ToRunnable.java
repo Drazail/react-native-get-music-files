@@ -7,14 +7,12 @@ import java.util.concurrent.Executor;
 public class ToRunnable implements Runnable {
 
     private Runnable task;
-    private SerialExecutor exec;
-    public ToRunnable(Runnable task, SerialExecutor executor) {
+    public ToRunnable(Runnable task) {
         this.task = task;
-        this.exec = executor;
     }
 
     public void run() {
-        exec.execute(this.task);
+        this.task.run();
     }
 }
 

@@ -14,7 +14,6 @@ import com.GetMusicFiles.Models.Options.GetSongsByPathOptions;
 import com.GetMusicFiles.Models.Options.GetSongsByPathsOptions;
 import com.GetMusicFiles.Models.Options.GetSongsOptions;
 import com.GetMusicFiles.Models.Options.SearchOptions;
-import com.GetMusicFiles.Utils.SerialExecutor;
 import com.GetMusicFiles.Utils.ToRunnable;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -32,12 +31,10 @@ import static com.GetMusicFiles.Methods.Search.searchDB;
 public class GetMusicFilesModule extends ReactContextBaseJavaModule {
 
     private final ReactApplicationContext reactContext;
-    private SerialExecutor executor;
 
-    public GetMusicFilesModule(ReactApplicationContext reactContext, SerialExecutor exec) {
+    public GetMusicFilesModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
-        this.executor = exec;
     }
 
 
@@ -60,7 +57,7 @@ public class GetMusicFilesModule extends ReactContextBaseJavaModule {
                     } catch (Exception e) {
                         callback.reject(e);
                     }
-                }, executor
+                }
         );
 
         runnable.run();
@@ -89,7 +86,7 @@ public class GetMusicFilesModule extends ReactContextBaseJavaModule {
                     } catch (Exception e) {
                         callback.reject(e);
                     }
-                }, executor
+                }
         );
 
         runnable.run();
@@ -109,7 +106,7 @@ public class GetMusicFilesModule extends ReactContextBaseJavaModule {
                     } catch (Exception e) {
                         callback.reject(e);
                     }
-                }, executor
+                }
         );
 
         runnable.run();
@@ -128,7 +125,7 @@ public class GetMusicFilesModule extends ReactContextBaseJavaModule {
                     } catch (Exception e) {
                         callback.reject(e);
                     }
-                }, executor
+                }
         );
 
         runnable.run();
@@ -145,7 +142,7 @@ public class GetMusicFilesModule extends ReactContextBaseJavaModule {
                     } catch (Exception e) {
                         callback.reject(e);
                     }
-                }, executor
+                }
         );
 
         runnable.run();
@@ -164,7 +161,7 @@ public class GetMusicFilesModule extends ReactContextBaseJavaModule {
                     } catch (Exception e) {
                         callback.reject(e);
                     }
-                }, executor
+                }
         );
 
         runnable.run();
@@ -183,7 +180,7 @@ public class GetMusicFilesModule extends ReactContextBaseJavaModule {
                     } catch (Exception e) {
                         callback.reject(e);
                     }
-                }, executor
+                }
         );
 
         runnable.run();
@@ -202,7 +199,7 @@ public class GetMusicFilesModule extends ReactContextBaseJavaModule {
                     } catch (Exception e) {
                         callback.reject(e);
                     }
-                }, executor
+                }
         );
 
         runnable.run();

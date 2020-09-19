@@ -4,36 +4,35 @@ import android.util.Base64;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.GetMusicFiles.Utils.MetaDataExtractor;
-import com.GetMusicFiles.Utils.SerialExecutor;
 import com.GetMusicFiles.Utils.ToRunnable;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
-import com.facebook.react.uimanager.ViewProps;
 import com.facebook.react.uimanager.annotations.ReactProp;
-import com.facebook.react.views.image.ImageResizeMode;
 import com.facebook.react.views.image.ReactImageView;
 import static android.util.Base64.*;
 
 
 public class CoverImage extends SimpleViewManager<ReactImageView> {
 
-    private SerialExecutor executor;
+    public static final String REACT_CLASS = "RCTCoverImageView";
 
-    public CoverImage(SerialExecutor exec){
+    ReactApplicationContext mCallerContext;
+
+    String placeHolder = "https://images-na.ssl-images-amazon.com/images/I/51bMt-LGOyL.png";
+
+    public CoverImage(ReactApplicationContext reactContext){
         super();
-        this.executor = exec;
+        mCallerContext = reactContext;
     }
 
-    public static final String REACT_CLASS = "RCTCoverImageView";
-    String placeHolder = "https://images-na.ssl-images-amazon.com/images/I/51bMt-LGOyL.png";
 
     @NonNull
     @Override
@@ -44,7 +43,7 @@ public class CoverImage extends SimpleViewManager<ReactImageView> {
     @NonNull
     @Override
     protected ReactImageView createViewInstance(ThemedReactContext context) {
-        return new ReactImageView(context, Fresco.newDraweeControllerBuilder(), null, null);
+        return new ReactImageView(context, Fresco.newDraweeControllerBuilder(), null, mCallerContext);
     }
 
     @ReactProp(name = "placeHolder")
@@ -73,7 +72,7 @@ public class CoverImage extends SimpleViewManager<ReactImageView> {
                 view.setSource(sources);
                 Log.d("RNGMF", "source set to def");
             }
-        }, this.executor);
+        });
         runnable.run();
 
 

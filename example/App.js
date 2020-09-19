@@ -21,6 +21,37 @@ import {
 import MusicFiles, {Constants, CoverImage} from 'react-native-get-music-files';
 
 type Props = {};
+
+const Item = ({title}) => (
+  <View
+    style={{
+      borderRadius: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+      overflow: 'hidden',
+      width: 120,
+      height: 120,
+      padding: 10,
+    }}>
+    <CoverImage
+      source={
+        '/storage/emulated/0/Download/03 - Nocturne No 2 in E flat major.mp3'
+      }
+      placeHolder={
+        'https://cdn2.iconfinder.com/data/icons/Qetto___icons_by_ampeross-d4njobq/256/library-music.png'
+      }
+      width={120}
+      height={120}
+      resizeMode="contain"
+    />
+  </View>
+);
+const DATA = Array.from({length: 1000}).map((v, i) => ({
+  id: i,
+}));
+
+const renderItem = ({item}) => <Item title={item.title} />;
+
 export default class App extends Component<Props> {
   constructor() {
     super();
@@ -147,13 +178,11 @@ export default class App extends Component<Props> {
       <View style={styles.container}>
         <ScrollView style={styles.scrollVIew}>
           <Text />
-          <CoverImage
-            source={'/storage/emulated/0/Download/Hurt - Johnny Cash.mp3'}
-            placeHolder={
-              'https://cdn2.iconfinder.com/data/icons/Qetto___icons_by_ampeross-d4njobq/256/library-music.png'
-            }
-            width={120}
-            height={120}
+          <FlatList
+            initialNumToRender={10}
+            data={DATA}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
           />
           <Text />
           <TextInput
