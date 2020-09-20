@@ -20,31 +20,15 @@ import {
 } from 'react-native';
 import MusicFiles, {Constants, CoverImage} from 'react-native-get-music-files';
 
-type Props = {};
-
-const Item = ({title}) => (
-  <View
-    style={{
-      borderRadius: 10,
-      alignItems: 'center',
-      justifyContent: 'center',
-      overflow: 'hidden',
-      width: 120,
-      height: 120,
-      padding: 10,
-    }}>
-    <CoverImage
-      source={
-        '/storage/emulated/0/Download/03 - Nocturne No 2 in E flat major.mp3'
-      }
-      placeHolder={
-        'https://cdn2.iconfinder.com/data/icons/Qetto___icons_by_ampeross-d4njobq/256/library-music.png'
-      }
-      width={120}
-      height={120}
-      resizeMode="contain"
-    />
-  </View>
+const Item = () => (
+  <CoverImage
+    source={
+      '/storage/emulated/0/Download/03 - Nocturne No 2 in E flat major.mp3'
+    }
+    width={20}
+    height={20}
+    style={{borderRadius: 100}}
+  />
 );
 const DATA = Array.from({length: 1000}).map((v, i) => ({
   id: i,
