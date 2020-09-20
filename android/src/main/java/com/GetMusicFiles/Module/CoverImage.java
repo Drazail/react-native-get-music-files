@@ -96,13 +96,13 @@ public class CoverImage extends SimpleViewManager<ReactImageView> {
                 context, getDraweeControllerBuilder(), mGlobalImageLoadListener, getCallerContext());
     }
 
-    // In JS this is Image.props.src
+    // In JS this is CoverImage.props.src
     @ReactProp(name = "src")
     public void setSource(ReactImageView view, @Nullable ReadableArray sources) {
         view.setSource(sources);
     }
 
-    // In JS this is Image.props.source
+    // In JS this is CoverImage.props.source
     @ReactProp(name = "source")
     public void setSrc(ReactImageView view, String path) {
         Log.d("RNGMF", "setting source for: " + path);
@@ -120,24 +120,26 @@ public class CoverImage extends SimpleViewManager<ReactImageView> {
         });
         runnable.run();
     }
-
+    
+    // In JS this is CoverImage.props.blurRadius
     @ReactProp(name = "blurRadius")
     public void setBlurRadius(ReactImageView view, float blurRadius) {
         view.setBlurRadius(blurRadius);
     }
 
-    // In JS this is Image.props.defaultSource
+    // In JS this is CoverImage.props.defaultSrc
     @ReactProp(name = "defaultSrc")
     public void setDefaultSource(ReactImageView view, @Nullable String source) {
         view.setDefaultSource(source);
     }
 
-    // In JS this is Image.props.loadingIndicatorSource.uri
+    // In JS this is CoverImage.props.loadingIndicatorSrc
     @ReactProp(name = "loadingIndicatorSrc")
     public void setLoadingIndicatorSource(ReactImageView view, @Nullable String source) {
         view.setLoadingIndicatorSource(source);
     }
-
+    
+    // In JS this is CoverImage.props.borderColor
     @ReactProp(name = "borderColor", customType = "Color")
     public void setBorderColor(ReactImageView view, @Nullable Integer borderColor) {
         if (borderColor == null) {
@@ -147,6 +149,7 @@ public class CoverImage extends SimpleViewManager<ReactImageView> {
         }
     }
 
+    // In JS this is CoverImage.props.overlayColor
     @ReactProp(name = "overlayColor", customType = "Color")
     public void setOverlayColor(ReactImageView view, @Nullable Integer overlayColor) {
         if (overlayColor == null) {
@@ -156,11 +159,13 @@ public class CoverImage extends SimpleViewManager<ReactImageView> {
         }
     }
 
+    // In JS this is CoverImage.props.borderWidth
     @ReactProp(name = "borderWidth")
     public void setBorderWidth(ReactImageView view, float borderWidth) {
         view.setBorderWidth(borderWidth);
     }
 
+    // In JS this is CoverImage.props.borderRadius
     @ReactPropGroup(
             names = {
                     ViewProps.BORDER_RADIUS,
@@ -182,12 +187,14 @@ public class CoverImage extends SimpleViewManager<ReactImageView> {
         }
     }
 
+    // In JS this is CoverImage.props.resizeMode
     @ReactProp(name = ViewProps.RESIZE_MODE)
     public void setResizeMode(ReactImageView view, @Nullable String resizeMode) {
         view.setScaleType(ImageResizeMode.toScaleType(resizeMode));
         view.setTileMode(ImageResizeMode.toTileMode(resizeMode));
     }
 
+    // In JS this is CoverImage.props.resizeMethod
     @ReactProp(name = ViewProps.RESIZE_METHOD)
     public void setResizeMethod(ReactImageView view, @Nullable String resizeMethod) {
         if (resizeMethod == null || "auto".equals(resizeMethod)) {
@@ -202,6 +209,7 @@ public class CoverImage extends SimpleViewManager<ReactImageView> {
         }
     }
 
+    // In JS this is CoverImage.props.tintColor
     @ReactProp(name = "tintColor", customType = "Color")
     public void setTintColor(ReactImageView view, @Nullable Integer tintColor) {
         if (tintColor == null) {
@@ -210,22 +218,26 @@ public class CoverImage extends SimpleViewManager<ReactImageView> {
             view.setColorFilter(tintColor, PorterDuff.Mode.SRC_IN);
         }
     }
-
+    
+    // In JS this is CoverImage.props.progressiveRenderingEnabled
     @ReactProp(name = "progressiveRenderingEnabled")
     public void setProgressiveRenderingEnabled(ReactImageView view, boolean enabled) {
         view.setProgressiveRenderingEnabled(enabled);
     }
 
+    // In JS this is CoverImage.props.fadeDuration
     @ReactProp(name = "fadeDuration")
     public void setFadeDuration(ReactImageView view, int durationMs) {
         view.setFadeDuration(durationMs);
     }
 
+    // In JS this is CoverImage.props.shouldNotifyLoadEvents
     @ReactProp(name = "shouldNotifyLoadEvents")
     public void setLoadHandlersRegistered(ReactImageView view, boolean shouldNotifyLoadEvents) {
         view.setShouldNotifyLoadEvents(shouldNotifyLoadEvents);
     }
-
+    
+   // In JS this is CoverImage.props.headers
     @ReactProp(name = "headers")
     public void setHeaders(ReactImageView view, ReadableMap headers) {
         view.setHeaders(headers);
